@@ -1,5 +1,5 @@
-OpenERP-Online-Payment
-======================
+OpenERP-Online-Payment-7.0
+==========================
 
 OpenERP Online Payment - Chinabank 在线支付 - 网银在线
 
