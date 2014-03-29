@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="chinabank_acquirer" model="portal.payment.acquirer">
+            <field name="name">Chinabank</field>
+            <field name="url_payment">https://Pay3.chinabank.com.cn/PayGate?encoding=UTF-8</field>
+            <field name="url_return">http://your_openerp_server_url/online_payment/chinabank_return</field>
+            <field name="url_notify">http://your_openerp_server_url/online_payment/chinabank_notify</field>
+            <field name="internal_name">chinabank</field>
+            <field name="sequence">20</field>
+            <field name="form_template"><![CDATA[
+% if object.company_id.paypal_account:
+<form method="post" name="E_FORM" action="${ctx.get('payment_url','')}" target="_blank">
+  <input type="hidden" name="v_mid"         value="${ctx.get('v_mid','')}">
+  <input type="hidden" name="v_oid"         value="${ctx.get('v_oid','')}">
+  <input type="hidden" name="v_amount"      value="${ctx.get('amount','')}">
+  <input type="hidden" name="v_moneytype"   value="${ctx.get('currency','')}">
+  <input type="hidden" name="v_url"         value="${ctx.get('v_url','')}">
+  <input type="hidden" name="v_md5info"     value="${ctx.get('v_md5info','')}">
+
+<!--以下几项项为网上支付完成后，随支付反馈信息一同传给信息接收页 -->  
+  <input type="hidden" name="remark1"       value="${ctx.get('record','')}">
+  <input type="hidden" name="remark2"       value="${ctx.get('remark2','')}">
+
+<!--以下几项只是用来记录客户信息，可以不用，不影响支付 -->
+  % if ctx.get('model','') == 'sale.order':
+  <!--收货人信息 -->
+  <input type="hidden" name="v_rcvname"      value="${object.partner_shipping_id.name or ''}">
+  <input type="hidden" name="v_rcvtel"       value="${object.partner_shipping_id.phone or ''}">
+  <input type="hidden" name="v_rcvpost"      value="${object.partner_shipping_id.zip or ''}">
+  <input type="hidden" name="v_rcvaddr"      value="${object.partner_shipping_id.street or ''}">
+  <input type="hidden" name="v_rcvemail"     value="${object.partner_shipping_id.email or ''}">
+  <input type="hidden" name="v_rcvmobile"    value="${object.partner_shipping_id.mobile or ''}">
+  % endif
+  <!--订货人信息 -->
+  <input type="hidden" name="v_ordername"    value="${object.partner_id.name or ''}">
+  <input type="hidden" name="v_ordertel"     value="${object.partner_id.phone or ''}">
+  <input type="hidden" name="v_orderpost"    value="${object.partner_id.zip or ''}">
+  <input type="hidden" name="v_orderaddr"    value="${object.partner_id.street or ''}">
+  <input type="hidden" name="v_orderemail"   value="${object.partner_id.email or ''}">
+  <input type="hidden" name="v_ordermobile"  value="${object.partner_id.mobile or ''}">
+
+<!--显示支付按钮 -->
+  <input type="image" name="submit" src="https://merchant3.chinabank.com.cn/images/button_1.gif"/>
+</form>
+% endif            
+            ]]></field>
+        </record>
+
+
+        
+    </data>
+
+</openerp>

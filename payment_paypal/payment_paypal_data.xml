@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="paypal_acquirer" model="portal.payment.acquirer">
+            <field name="name">Paypal</field>
+            <field name="url_payment">https://www.paypal.com/cgi-bin/webscr</field>
+            <field name="url_return">http://your_openerp_server_url/online_payment/paypal_return</field>
+            <field name="url_notify">http://your_openerp_server_url/online_payment/paypal_notify</field>
+            <field name="url_cancel">http://your_openerp_server_url/online_payment/paypal_cancel</field>
+            <field name="internal_name">paypal</field>
+            <field name="sequence">50</field>
+            <field name="form_template"><![CDATA[
+% if object.company_id.paypal_account:
+<form action="${ctx.get('payment_url','')}" method="post" target="_blank">
+  <input type="hidden" name="cmd" value="_xclick"/>
+  <input type="hidden" name="business" value="${object.company_id.paypal_account}"/>
+  <input type="hidden" name="item_name" value="${object.company_id.name} ${kind.title()} ${reference}"/>
+  <input type="hidden" name="amount" value="${amount}"/>
+  <input type="hidden" name="currency_code" value="${currency.name}"/>
+  <input type="hidden" name="return"  value="${ctx.get('return_url','')}"/>
+  <input type="hidden" name="notify_url"  value="${ctx.get('notify_url','')}"/>
+  <input type="hidden" name="cancel_return"  value="${ctx.get('cancel_url','')}"/>
+  <input type="hidden" name="custom" value="${ctx.get('record','')}">
+  <input type="hidden" name="invoice" value="${ctx.get('code','')}">
+  <input type="hidden" name="rm" value="2" />
+  <input type="hidden" name="charset" value="utf-8"/>
+  <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+</form>
+% endif
+            ]]></field>
+        </record>
+
+        
+    </data>
+
+</openerp>
